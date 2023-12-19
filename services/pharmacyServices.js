@@ -1,17 +1,17 @@
 const asyncHandler = require("express-async-handler");
 const connect = require("../config/database");
 const {
-  createLapRoom,
-  insertLapRoom,
-  updateLapRoom,
-} = require("../utils/queries/lapRoomQueries");
+  createPharmacy,
+  insertIntoPharmacy,
+  updatePharmacy,
+} = require("../utils/queries/pharmacyQueries");
 
-exports.createLapRoomTabe = asyncHandler(async (req, res) => {
+exports.createPharmacyTabe = asyncHandler(async (req, res) => {
   connect.query("USE hospital", function (err, result) {
     if (err) throw err;
 
     // Create Table
-    let sql = createLapRoom;
+    let sql = createPharmacy;
     connect.query(sql, function (err, result) {
       if (err) throw err;
       console.log("Table created");
@@ -22,12 +22,12 @@ exports.createLapRoomTabe = asyncHandler(async (req, res) => {
   });
 });
 
-exports.insertIntoLapRoom = asyncHandler(async (req, res) => {
+exports.insertIntoPharmacy = asyncHandler(async (req, res) => {
   connect.query("USE hospital", function (err, result) {
     if (err) throw err;
 
-    // insert LapRoom
-    sql = insertLapRoom(req);
+    // insert Department
+    sql = insertIntoPharmacy(req);
     connect.query(sql, function (err, result) {
       if (err) throw err;
       console.log("Record Inserted");
@@ -52,7 +52,7 @@ exports.UpdateOneOrMore = asyncHandler(async (req, res) => {
     if (err) throw err;
 
     // insert Department
-    sql = updateLapRoom(req);
+    sql = updatePharmacy(req);
     connect.query(sql, function (err, result) {
       if (err) throw err;
       console.log("Record updated successfully.");

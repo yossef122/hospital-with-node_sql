@@ -19,13 +19,40 @@ exports.createPatient = `
     )
 `;
 
+// exports.insertPatient = (req) => {
+//   console.log(req.body.id);
+//   return {
+//     sql: `INSERT INTO patient (id, name, address, gender,
+//       email, disease, marital_status,
+//       chronic_disease, age, prescription_id,
+//       teatment, phone, room_id, doctor_id
+//     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+//     values: [
+//       req.body.id,
+//       req.body.name,
+//       req.body.address,
+//       req.body.gender,
+//       req.body.email,
+//       req.body.disease,
+//       req.body.marital_status,
+//       req.body.chronic_disease,
+//       req.body.age,
+//       req.body.prescription_id,
+//       req.body.teatment,
+//       req.body.phone,
+//       req.body.room_id,
+//       req.body.doctor_id,
+//     ],
+//   };
+// };
+
 exports.insertPatient = (req) => {
+  console.log(req.body.id);
   return {
-    sql: `INSERT INTO patient (
-      id, name, address, gender,
+    sql: `INSERT INTO patient (patient_id, patient_name, address, gender,
       email, disease, marital_status,
       chronic_disease, age, prescription_id,
-      teatment, phone, room_id, doctor_id
+      treatment, phone, room_id, doctor_id
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
     values: [
       req.body.id,
@@ -47,6 +74,7 @@ exports.insertPatient = (req) => {
 };
 
 exports.updatePatient = (req, res) => {
+  
   const newPatientName = req.body.patient_name;
   const newAddress = req.body.address;
   const newGender = req.body.gender;

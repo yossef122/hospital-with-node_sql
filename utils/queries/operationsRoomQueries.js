@@ -21,12 +21,10 @@ exports.updateOperationsRoom = (req, res) => {
 
   // Check if at least one of the values is provided
   if (!newOperationsRoomId && !newRoomId) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "At least one parameter (operations_Room or room_id) is required for the update.",
-      });
+    return res.status(400).json({
+      error:
+        "At least one parameter (operations_Room or room_id) is required for the update.",
+    });
   }
 
   // Build the SQL query based on the provided parameters

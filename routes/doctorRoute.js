@@ -1,9 +1,13 @@
 const express = require("express");
 
-const { insertIntoDoctorTable } = require("../services/doctorServices");
+const {
+  createDoctorTabe,
+  insertIntoDoctor,
+  UpdateOneOrMore,
+} = require("../services/doctorServices");
 
 const router = express.Router();
 
-router.route("/").get(insertIntoDoctorTable);
-
+router.route("/").get(createDoctorTabe).post(insertIntoDoctor);
+router.route("/:doctorId").put(UpdateOneOrMore);
 module.exports = router;

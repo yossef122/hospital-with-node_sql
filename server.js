@@ -13,6 +13,7 @@ const icuRoom = require("./routes/IcuRoom");
 const lapRoom = require("./routes/lapRoom");
 const regularRoom = require("./routes/regularRoom");
 const wardBoy = require("./routes/wardBoyRoute");
+const pharmacy = require("./routes/PharmacyRoute");
 
 dotenv.config({ path: "config.env" });
 
@@ -33,6 +34,12 @@ app.use("/api/v1/icuRoom", icuRoom);
 app.use("/api/v1/lapRoom", lapRoom);
 app.use("/api/v1/regularRoom", regularRoom);
 app.use("/api/v1/wardBoy", wardBoy);
+app.use("/api/v1/pharmacy", pharmacy);
+
+app.all("*", (req, res, next) => {
+  next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
+});
+
 
 const Port = process.env.PORT || 8000;
 
