@@ -14,6 +14,9 @@ const lapRoom = require("./routes/lapRoom");
 const regularRoom = require("./routes/regularRoom");
 const wardBoy = require("./routes/wardBoyRoute");
 const pharmacy = require("./routes/PharmacyRoute");
+const hospital = require("./routes/hospitalRoute");
+const join1Route = require("./routes/join1Route");
+const join2Route = require("./routes/join2Route");
 
 dotenv.config({ path: "config.env" });
 
@@ -35,11 +38,13 @@ app.use("/api/v1/lapRoom", lapRoom);
 app.use("/api/v1/regularRoom", regularRoom);
 app.use("/api/v1/wardBoy", wardBoy);
 app.use("/api/v1/pharmacy", pharmacy);
+app.use("/api/v1/hospital", hospital);
+app.use("/api/v1/join1", join1Route);
+app.use("/api/v1/join2", join2Route);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
-
 
 const Port = process.env.PORT || 8000;
 

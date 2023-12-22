@@ -31,12 +31,10 @@ exports.updateNurse = (req, res) => {
 
   // Check if at least one of the values is provided
   if (!newNurseName && !newPhone && !newShift && !newDoctorId) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "At least one parameter (nurse_name, phone, shift, or doctor_id) is required for the update.",
-      });
+    return res.status(400).json({
+      error:
+        "At least one parameter (nurse_name, phone, shift, or doctor_id) is required for the update.",
+    });
   }
 
   // Build the SQL query based on the provided parameters
