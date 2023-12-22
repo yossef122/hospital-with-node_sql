@@ -6,104 +6,106 @@ exports.createDoctor = `
         phone VARCHAR(255),
         shift DATE,
         department_id INT,
-        FOREIGN KEY (department_id) REFERENCES Department(department_id)
+        FOREIGN KEY (department_id) REFERENCES Department(department_id),        
+        hospital_name VARCHAR(255),
+        FOREIGN KEY (hospital_name) REFERENCES Hospital(name)
     )
 `;
 
 exports.insertDoctor = (req) => {
   return {
     sql: `INSERT INTO Doctor (
-      doctor_id, doctor_name, doctor_email, phone, shift, department_id
-    ) VALUES (?, ?, ?, ?, ?, ?);`,
+      doctor_id, doctor_name, doctor_email, phone, shift, department_id, hospital_name
+    ) VALUES (?, ?, ?, ?, ?, ?, ?);`,
     values: [
       req.body.doctor_id,
       req.body.doctor_name,
       req.body.doctor_email,
       req.body.phone,
-      req.body.shift,
+      req.body.shift, // Assuming the shift is provided as a valid DATE format in the request body
       req.body.department_id,
+      req.body.hospital_name,
     ],
   };
 };
 
+
 exports.updateDoctor = (req, res) => {
-  const newDoctorId = req.body.doctor_id;
   const newDoctorName = req.body.doctor_name;
   const newDoctorEmail = req.body.doctor_email;
   const newPhone = req.body.phone;
   const newShift = req.body.shift;
   const newDepartmentId = req.body.department_id;
+  const newHospitalName = req.body.hospital_name;
 
   if (
-    !newDoctorId &&
     !newDoctorName &&
     !newDoctorEmail &&
     !newPhone &&
     !newShift &&
-    !newDepartmentId
+    !newDepartmentId &&
+    !newHospitalName
   ) {
     return res.status(400).json({
-      error:
-        "At least one parameter (doctor_id, doctor_name, doctor_email, phone, shift, or department_id) is required for the update.",
+      error: "At least one parameter is required for the update.",
     });
   }
 
-  // Build the SQL query based on the provided parameters
   let sql = "UPDATE `Doctor` SET ";
   const values = [];
 
-  if (newDoctorId) {
-    sql += "`doctor_id` = ?";
-    values.push(newDoctorId);
-  }
-
   if (newDoctorName) {
-    if (newDoctorId) {
-      sql += ", "; // Add a comma if the previous parameter is present
-    }
     sql += "`doctor_name` = ?";
     values.push(newDoctorName);
   }
 
   if (newDoctorEmail) {
-    if (newDoctorId || newDoctorName) {
-      sql += ", "; // Add a comma if the previous parameters are present
+    if (newDoctorName) {
+      sql += ", ";
     }
     sql += "`doctor_email` = ?";
     values.push(newDoctorEmail);
   }
 
   if (newPhone) {
-    if (newDoctorId || newDoctorName || newDoctorEmail) {
-      sql += ", "; // Add a comma if the previous parameters are present
+    if (newDoctorName || newDoctorEmail) {
+      sql += ", ";
     }
     sql += "`phone` = ?";
     values.push(newPhone);
   }
 
   if (newShift) {
-    if (newDoctorId || newDoctorName || newDoctorEmail || newPhone) {
-      sql += ", "; // Add a comma if the previous parameters are present
+    if (newDoctorName || newDoctorEmail || newPhone) {
+      sql += ", ";
     }
     sql += "`shift` = ?";
     values.push(newShift);
   }
 
   if (newDepartmentId) {
-    if (
-      newDoctorId ||
-      newDoctorName ||
-      newDoctorEmail ||
-      newPhone ||
-      newShift
-    ) {
-      sql += ", "; // Add a comma if the previous parameters are present
+    if (newDoctorName || newDoctorEmail || newPhone || newShift) {
+      sql += ", ";
     }
     sql += "`department_id` = ?";
     values.push(newDepartmentId);
   }
 
-  sql += " WHERE `Doctor`.`doctor_id` = ?;";
+  if (newHospitalName) {
+    if (
+      newDoctorName ||
+      newDoctorEmail ||
+      newPhone ||
+      newShift ||
+      newDepartmentId
+    ) {
+      sql += ", ";
+    }
+    sql += "`hospital_name` = ?";
+    values.push(newHospitalName);
+  }
+
+  sql += " WHERE `doctor_id` = ?;";
   values.push(req.params.doctorId); // Assuming doctorId is a parameter in the route
 
   return {

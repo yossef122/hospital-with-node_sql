@@ -1,40 +1,37 @@
 exports.createPharmacy = `
     CREATE TABLE IF NOT EXISTS Pharmacy (
-        pharmacy_id INT PRIMARY KEY,
+        medicine_id INT PRIMARY KEY,
         medicine VARCHAR(255),
-        doctor_id INT,
-        FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id),
         quantity INT,
-        price INT
+        price INT,
+        hospital_name VARCHAR(255),
+        FOREIGN KEY (hospital_name) REFERENCES Hospital(name)
     )
 `;
 
 exports.insertIntoPharmacy = (req) => {
   return {
     sql: `INSERT INTO Pharmacy (
-      pharmacy_id, medicine, doctor_id, quantity, price
-    ) VALUES (?, ?, ?, ?, ?);`,
+      medicine_id, medicine, quantity, price, hospital_name
+    ) VALUES (?, ?, ?, ?,  ?);`,
     values: [
-      req.body.pharmacy_id,
+      req.body.medicine_id,
       req.body.medicine,
-      req.body.doctor_id,
       req.body.quantity,
       req.body.price,
+      req.body.hospital_name, // Added hospital_name
     ],
   };
 };
 
 exports.updatePharmacy = (req, res) => {
-  const newMedicine = req.body.medicine;
-  const newDoctorId = req.body.doctor_id;
-  const newQuantity = req.body.quantity;
-  const newPrice = req.body.price;
+  const { medicine,  quantity, price, hospital_name } = req.body;
 
   // Check if at least one of the values is provided
-  if (!newMedicine && !newDoctorId && !newQuantity && !newPrice) {
+  if (!medicine &&  !quantity && !price && !hospital_name) {
     return res.status(400).json({
       error:
-        "At least one parameter (medicine, doctor_id, quantity, or price) is required for the update.",
+        "At least one parameter (medicine,  quantity, price, or hospital_name) is required for the update.",
     });
   }
 
@@ -42,36 +39,20 @@ exports.updatePharmacy = (req, res) => {
   let sql = "UPDATE `Pharmacy` SET ";
   const values = [];
 
-  if (newMedicine) {
-    sql += "`medicine` = ?";
-    values.push(newMedicine);
-  }
-
-  if (newDoctorId) {
-    if (newMedicine) {
-      sql += ", "; // Add a comma if previous parameters are present
+  const addValue = (field, value) => {
+    if (value !== undefined) {
+      if (values.length > 0) sql += ", ";
+      sql += `\`${field}\` = ?`;
+      values.push(value);
     }
-    sql += "`doctor_id` = ?";
-    values.push(newDoctorId);
-  }
+  };
 
-  if (newQuantity) {
-    if (newMedicine || newDoctorId) {
-      sql += ", "; // Add a comma if previous parameters are present
-    }
-    sql += "`quantity` = ?";
-    values.push(newQuantity);
-  }
+  addValue("medicine", medicine);
+  addValue("quantity", quantity);
+  addValue("price", price);
+  addValue("hospital_name", hospital_name); // Added hospital_name
 
-  if (newPrice) {
-    if (newMedicine || newDoctorId || newQuantity) {
-      sql += ", "; // Add a comma if previous parameters are present
-    }
-    sql += "`price` = ?";
-    values.push(newPrice);
-  }
-
-  sql += " WHERE `pharmacy_id` = ?;";
+  sql += " WHERE `medicine_id` = ?;";
   values.push(req.params.pharmacyId); // Assuming pharmacyId is a parameter in the route
 
   return {
