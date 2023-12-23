@@ -1,3 +1,4 @@
+
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -8,15 +9,12 @@ const doctorRoutes = require("./routes/doctorRoute");
 const departmentRoute = require("./routes/departmentRoute");
 const nurseRoute = require("./routes/nurseRoute");
 const roomRoute = require("./routes/roomsRoute");
-const operationsRoom = require("./routes/operationsRoom");
-const icuRoom = require("./routes/IcuRoom");
-const lapRoom = require("./routes/lapRoom");
-const regularRoom = require("./routes/regularRoom");
 const wardBoy = require("./routes/wardBoyRoute");
 const pharmacy = require("./routes/PharmacyRoute");
 const hospital = require("./routes/hospitalRoute");
 const join1Route = require("./routes/join1Route");
 const join2Route = require("./routes/join2Route");
+const getData = require("./routes/getRoute");
 
 dotenv.config({ path: "config.env" });
 
@@ -32,19 +30,16 @@ app.use("/api/v1/doctor", doctorRoutes);
 app.use("/api/v1/department", departmentRoute);
 app.use("/api/v1/nurse", nurseRoute);
 app.use("/api/v1/rooms", roomRoute);
-app.use("/api/v1/operationsRoom", operationsRoom);
-app.use("/api/v1/icuRoom", icuRoom);
-app.use("/api/v1/lapRoom", lapRoom);
-app.use("/api/v1/regularRoom", regularRoom);
 app.use("/api/v1/wardBoy", wardBoy);
 app.use("/api/v1/pharmacy", pharmacy);
 app.use("/api/v1/hospital", hospital);
 app.use("/api/v1/join1", join1Route);
 app.use("/api/v1/join2", join2Route);
+app.use("/api/v1/getData", getData);
 
-app.all("*", (req, res, next) => {
-  next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
-});
+// app.all("*", (req, res, next) => {
+//   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
+// });
 
 const Port = process.env.PORT || 8000;
 
@@ -60,3 +55,4 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
+
